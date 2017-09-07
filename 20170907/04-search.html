@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="01-index.css"/>
+		
+	</head>
+	<body>
+	  <ul id="hot-goods"></ul>
+	  <script src="myajax.js" type="text/javascript" charset="utf-8"></script>
+	  <script type="text/javascript">
+	  	var search_text = getQueryString('search_text');
+	  	
+	  	var oGoods = document.querySelector('#hot-goods');
+	  	myajax.get('http://h6.duchengjiu.top/shop/api_goods.php', 
+	  	{search_text: search_text},
+	  	function(err, responseText){
+	  	  var json = JSON.parse(responseText);
+	  	  console.log(json);
+	  	  var data = json.data;
+	  	  for (var i = 0; i < data.length; i++) {
+	  	  	var obj = data[i];
+	  	  	oGoods.innerHTML += `<li>
+	  	  	  <div><img src='${obj.goods_thumb}'/></div>
+	  	  	  <div><p>${obj.goods_name}</p></div>
+	  	  	  <div><span>¥ ${obj.price}</sapn></div>
+	  	  	</li>`
+	  	  }
+	  	});
+	  </script>
+	</body>
+</html>

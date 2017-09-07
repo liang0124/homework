@@ -1,0 +1,115 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #f1f1f1;
+}
+
+#header {
+  width: 1065px;
+  height: 50px;
+  margin: auto;
+  background: oldlace;
+
+}
+#header a{
+  text-decoration: none;
+  color: white;
+  border-radius: 100px;
+  background: orangered;
+  margin: 7px;
+}
+#header a:hover{
+  background: navajowhite;
+  color: cornflowerblue;
+}
+.login{
+  float: left;
+  padding: 5px;
+  margin-right: 10px;
+}
+.register{
+  float: left;
+  padding: 5px;
+  
+}
+.shoppingTrolley{
+  padding: 5px;
+  float: right;
+}
+#new {
+  width: 1065px;
+  height: 50px;
+  margin: 10px auto;
+  background: orange;
+  
+}
+#cat {
+  float: left;
+}
+
+#cat li {
+  float: left;
+  margin: 10px;
+  padding: 5px;
+  background: orange;
+  list-style: none;
+}
+#cat a{
+  text-decoration: none;
+  color: white;
+}
+#search {
+  margin: 10px;
+  width: 250px;
+  height: 30px;
+  float: right;
+  border-style: none;
+  padding-left: 10px;
+  border-radius: 5px;
+}
+
+#hot {
+  width: 900px;
+  margin: auto;
+}
+
+#hot-goods {
+  margin-top: 10px;
+  width: 900px;
+  margin: auto;
+}
+
+#hot-goods li {
+  float: left;
+  width: 200px;
+  height: 370px;
+  border: 1px solid #CFCFCF;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  list-style: none;
+}
+
+#hot-goods li:hover img {
+  opacity: 0.5;
+}
+
+#hot-goods li:hover {
+  border: 1px solid orange;
+}
+
+#hot-goods p {
+  padding: 10px;
+  height: 85px;
+}
+
+#hot-goods span {
+  padding: 10px;
+  color: orange;
+}
+
+#hot-goods img {
+  width: 100%;
+}

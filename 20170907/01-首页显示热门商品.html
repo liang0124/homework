@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="01-index.css"/>
+  </head>
+
+  <body>
+    <script src="myajax.js" type="text/javascript" charset="utf-8"></script>
+    <!--//搜索框-->
+    <div id="header">
+      <a href="05-register.html" class="login">注册</a>
+      <a href="06-login.html" class="register">登录</a>
+      <a href="07-cart.html" class="shoppingTrolley">购物车</a>
+    </div>
+    <div id="new">
+    	<input type="text" id="search" placeholder="请输入搜索内容内容" />
+      <ul id="cat"></ul>
+    </div>
+    <div id="hot">
+      <ul id="hot-goods"></ul>
+    </div>
+
+    <!--//搜索框-->
+    <script type="text/javascript">
+      var oSearch = document.querySelector("#search");
+      oSearch.onkeyup = function(event) {
+        if(event.keyCode === 13) {
+          location.href = '04-search.html?search_text=' + this.value;
+        }
+      }
+    </script>
+    <!--商品列表-->
+    <script type="text/javascript">
+      var oCat = document.querySelector('#cat');
+      myajax.get('http://h6.duchengjiu.top/shop/api_cat.php', {}, function(error, responseText) {
+        var json = JSON.parse(responseText);
+        var data = json.data;
+        for(var i = 0; i < data.length; i++) {
+          var obj = data[i];
+          oCat.innerHTML += `<li><a href='02-商品列表.html?cat_id=${obj.cat_id}'>${obj.cat_name}</a></li>`
+        }
+      })
+    </script>
+    <!--热门商品-->
+    <script type="text/javascript">
+      var oGoods = document.querySelector('#hot-goods');
+      myajax.get('http://h6.duchengjiu.top/shop/api_goods.php', {}, function(error, responseText) {
+        var json = JSON.parse(responseText);
+        console.log(json);
+        var data = json.data;
+        for(var i = 0; i < data.length; i++) {
+          var obj = data[i];
+          oGoods.innerHTML += `<li><a href='08-goods.html?goods_id=${obj.goods_id}'></a>
+          <div><img src='${obj.goods_thumb}'/></div>
+          <div><p>${obj.goods_name}</p></div>
+          <div><span>${obj.price}</span></div>
+          
+          </li>`
+        }
+      });
+    </script>
+  </body>
+
+</html>
