@@ -1,0 +1,17 @@
+{
+  "name": "todo",
+  "version": "1.0.0",
+  "description": "npm init -y\r npm i -S underscore vue todomvc-app-css\r vim index.html\r 复制格式化后的html",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "todomvc-app-css": "^2.1.0",
+    "underscore": "^1.8.3",
+    "vue": "^2.5.3"
+  }
+}

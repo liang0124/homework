@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>云笔记</title>
+  <link rel="stylesheet" href="./css/index.css">
+</head>
+
+<body>
+  <p>
+    功能介绍：<br>
+    1、添加：输入内容后回车可加入列表<br>
+    2、删除：加入到列表后点击X可删除<br>
+    3、点击^的时候全部完成<br>
+    4、双击加入都的内容可以进行修改，修改后点击输入框外任意地方可以保存或者回车保存。<br>
+    5、修改时把内容删除，在次刷新页面删除的内容不会再出现<br>
+    6、点击所有、未完成、已完成显示对应内容<br>
+    7、点击清空，清空已完成。<br>
+    8、可以实时观察还未完成的内容有哪些。<br>
+  </p>
+  <section class="todoapp">
+    <header class="header">
+      <h1>云笔记</h1>
+      <input class="new-todo" placeholder="你需要完成什么?" autofocus="" v-model="newTodo" @keyup.enter.trim="addTodo">
+    </header>
+    <section class="main" v-show="showList">
+      <input class="toggle-all" id="toggle-all" type="checkbox" v-model="allDone">
+      <label for="toggle-all">完成所有</label>
+      <ul class="todo-list">
+        <li :class="{completed: todo.checked, editing: index === editingIndex}" v-for="(todo, index) in filteredTodoList" :key="'todo-'+index">
+          <div class="view">
+            <input class="toggle" type="checkbox" v-model="todo.checked">
+            <label @dblclick="editTodo(index)">{{ todo.text }}</label>
+            <button class="destroy" @click="deleteTodo(todo)"></button>
+          </div>
+          <input class="edit" type="text" v-model="todo.text" v-focus="index === editingIndex" @blur="saveTodo(todo)" @keyup.enter="saveTodo(todo)">
+        </li>
+      </ul>
+    </section>
+    <footer class="footer" v-show="showList">
+      <span class="todo-count">
+        <strong>{{ activeCount }}</strong> 还未完成</span>
+      <ul class="filters">
+        <li>
+          <a :class="{selected: visibility === 'all'}" href="#/" @click="visibility='all'">所有</a>
+        </li>
+        <li>
+          <a :class="{selected: visibility === 'active'}" href="#/active" @click="visibility = 'active'">未完成</a>
+        </li>
+        <li>
+          <a :class="{selected: visibility === 'completed'}" href="#/completed" @click="visibility = 'completed'">已完成</a>
+        </li>
+      </ul>
+
+      <button class="clear-completed" @click="clearCompleted" v-show="completedCount > 0">清空</button>
+
+    </footer>
+  </section>
+  <script src="./js/vue.min.js"></script>
+  <script src="./js/underscore-min.js"></script>
+  <script src="./js/store.js"></script>
+  <script>
+    // 注册一个全局自定义指令 v-focus
+    Vue.directive('focus', {
+      // 当绑定元素插入到 DOM 中。
+      inserted(el) {
+        // 聚焦元素
+        el.focus()
+      },
+      // 当绑定元素更新的时候
+      update(el) {
+        el.focus();
+      }
+    });
+    // 一个普通的过滤的对象, 用来过滤任务列表
+    var filters = {
+      all: function (todos) {
+        return todos;
+      },
+      active: function (todos) {
+        return todos.filter(function (todo) {
+          return !todo.checked;
+        });
+      },
+      completed: function (todos) {
+        return todos.filter(function (todo) {
+          return todo.checked;
+        });
+      }
+    };
+    var visibility = location.hash.substr(location.hash.indexOf('/') + 1);
+    visibility = visibility === '' ? 'all' : visibility
+    var todoapp = new Vue({
+      //  挂载
+      el: '.todoapp',
+      // 数据
+      data: {
+        newTodo: '',
+        todoList: [],
+        editingIndex: -1,
+        todoList: todoStorage.fetch(),
+        doneState: false,
+        visibility: visibility,
+      },
+      // 观察属性变化
+      watch: {
+        todoList: {
+          deep: true,
+          handler: todoStorage.save
+        },
+        handler() {
+          this.todoList.map(todo => {
+            todo.checked = this.doneState
+          })
+        }
+      },
+      // 发法
+      methods: {
+        addTodo() {
+          this.newTodo = this.newTodo.trim();
+          if (this.newTodo.length < 1) {
+            return;
+          }
+          this.todoList.unshift({
+            text: this.newTodo,
+            checked: false
+          });
+          this.newTodo = ''
+        },
+        deleteTodo(todo) {
+          this.todoList = _.without(this.todoList, todo)
+        },
+        editTodo(index) {
+          this.editingIndex = index
+        },
+        saveTodo(todo) {
+          this.editingIndex = -1
+          if (todo.text.trim().length < 1) {
+            this.deleteTodo(todo)
+          }
+        },
+        clearCompleted() {
+          this.todoList = filters.active(this.todoList);
+        }
+      },
+      // 计算属性
+      computed: {
+        showList() {
+          return this.todoList.length > 0;
+        },
+        activeCount() {
+          return filters.active(this.todoList).length;
+        },
+        allDone: {
+          get() {
+            return this.activeCount === 0;
+          },
+          set(value) {
+            this.todoList.forEach(todo => {
+              todo.checked = value
+            })
+          }
+        },
+        filteredTodoList: function () {
+          return filters[this.visibility](this.todoList);
+        },
+        completedCount() {
+          return filters.completed(this.todoList).length;
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>
